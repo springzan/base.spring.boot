@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.own.micro.service</groupId>
+    <artifactId>own-spring-boot</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <packaging>jar</packaging>
+
+    <properties>
+        <spring-boot.version>1.4.1.RELEASE</spring-boot.version>
+        <slf4j-api.version>1.7.10</slf4j-api.version>
+        <fastjson.version>1.2.29</fastjson.version>
+        <guava.version>18.0</guava.version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+            <version>${spring-boot.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-logging</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-tomcat</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <!--slf4j-->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${slf4j-api.version}</version>
+        </dependency>
+        <!--slf4j bindings -->
+
+        <!--jetty-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-jetty</artifactId>
+            <version>${spring-boot.version}</version>
+        </dependency>
+        <!--jetty end -->
+        <!-- fast json -->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>${fastjson.version}</version>
+        </dependency>
+        <!-- fast json end -->
+        <!-- guava -->
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>${guava.version}</version>
+        </dependency>
+        <!-- guava end-->
+    </dependencies>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <!-- Import dependency management from Spring Boot -->
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>${spring-boot.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.6.0</version>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                    <encoding>UTF-8</encoding>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>3.0.1</version>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar-no-fork</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+    <profiles>
+        <profile>
+            <id>dev</id>
+            <!-- 默认激活开发配置 -->
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <maven.profiles.activation>debug</maven.profiles.activation>
+                <maven-releases-repo-url>https://nexus.e-bao.cn/repository/maven-releases/</maven-releases-repo-url>
+                <maven-snapshots-repo-url>https://nexus.e-bao.cn/repository/maven-snapshots/</maven-snapshots-repo-url>
+            </properties>
+            <repositories>
+                <repository>
+                    <id>maven-public</id>
+                    <name>own maven public</name>
+                    <url>https://nexus.e-bao.cn/repository/maven-public/</url>
+                </repository>
+            </repositories>
+            <pluginRepositories>
+                <pluginRepository>
+                    <id>maven-public</id>
+                    <name>own maven public</name>
+                    <url>https://nexus.e-bao.cn/repository/maven-public/</url>
+                </pluginRepository>
+            </pluginRepositories>
+            <profile>
+                <id>test</id>
+                <properties>
+                    <maven.profiles.activation>test</maven.profiles.activation>
+                    <maven-releases-repo-url>http://10.132.1.123:8082/repository/maven-releases/</maven-releases-repo-url>
+                    <maven-snapshots-repo-url>http://10.132.1.123:8082/repository/maven-snapshots/</maven-snapshots-repo-url>
+                </properties>
+            </profile>
+            <profile>
+                <id>prod</id>
+                <properties>
+                    <maven.profiles.activation>prod</maven.profiles.activation>
+                    <maven-releases-repo-url>http://10.132.1.123:8082/repository/maven-releases/</maven-releases-repo-url>
+                    <maven-snapshots-repo-url>http://10.132.1.123:8082/repository/maven-snapshots/</maven-snapshots-repo-url>
+                </properties>
+            </profile>
+        </profile>
+    </profiles>
+
+    <distributionManagement>
+        <repository>
+            <id>releases</id>
+            <name>own maven releases</name>
+            <url>${maven-releases-repo-url}</url>
+        </repository>
+        <snapshotRepository>
+            <id>snapshots</id>
+            <name>own maven snapshots</name>
+            <url>${maven-snapshots-repo-url}</url>
+        </snapshotRepository>
+    </distributionManagement>
+</project>
